@@ -1,46 +1,67 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Admin Panel</title>
-<style>
-  body {
-    background: #000;
-    color: #0f0;
-    font-family: monospace;
-    margin: 0; padding: 20px;
-  }
-  h1 {
-    margin-bottom: 20px;
-  }
-  .user-list {
-    border: 1px solid #0f0;
-    padding: 10px;
-    max-width: 400px;
-  }
-  .user {
-    border-bottom: 1px solid #0f0;
-    padding: 5px 0;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            color: #00ff00;
+        }
+        th, td {
+            border: 1px solid #00ff00;
+            padding: 8px 12px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Админ панель</h1>
-
-<div class="user-list" id="user-list">
-  <div class="user">user_user — ABC123</div>
-  <!-- Тут будут появляться новые пользователи -->
+<div class="container">
+    <h1>Admin Panel</h1>
+    <table id="codeTable">
+        <tr>
+            <th>Код</th>
+            <th>Дата отправки</th>
+        </tr>
+    </table>
 </div>
 
-<p style="margin-top:20px;">Когда выйдет что-то новое, я обязательно оповещу вас.</p>
-
 <script>
-  // Здесь можно будет подключить сохранение пользователей
-  // Пока список статичный для демонстрации
+    // Пример для теста - здесь ты потом вручную будешь добавлять новые коды
+    const codes = JSON.parse(localStorage.getItem('submittedCodes')) || [];
 
-  // Если хочешь, можем потом добавить запись и чтение через сервер или Google Sheets
+    const table = document.getElementById('codeTable');
+
+    codes.forEach(codeEntry => {
+        const row = document.createElement('tr');
+        const codeCell = document.createElement('td');
+        const dateCell = document.createElement('td');
+
+        codeCell.innerText = codeEntry.code;
+        dateCell.innerText = codeEntry.date;
+
+        row.appendChild(codeCell);
+        row.appendChild(dateCell);
+        table.appendChild(row);
+    });
 </script>
 
 </body>

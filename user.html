@@ -1,103 +1,101 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Папка с видео</title>
-<style>
-  body {
-    background: #000;
-    color: #0f0;
-    font-family: monospace;
-    margin: 0; padding: 20px;
-  }
-  .folder {
-    border: 2px solid #0f0;
-    padding: 15px;
-    width: 300px;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 20px;
-  }
-  .folder:hover {
-    background: #033;
-  }
-  #video-container {
-    display: none;
-    margin-bottom: 20px;
-  }
-  video {
-    max-width: 100%;
-    border: 1px solid #0f0;
-  }
-  #question-container {
-    display: none;
-    margin-top: 20px;
-  }
-  input, button {
-    background: #000;
-    color: #0f0;
-    border: 1px solid #0f0;
-    padding: 8px;
-    font-family: monospace;
-    font-size: 1rem;
-  }
-  button {
-    cursor: pointer;
-  }
-  #result {
-    margin-top: 15px;
-    font-weight: bold;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video and Question</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        video {
+            max-width: 90%;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        input, button {
+            background-color: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 7px 10px;
+            margin: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-<div class="folder" id="folder">Папка с видео</div>
+<h1>Видео-вопрос</h1>
 
-<div id="video-container">
-  <video id="video" controls>
-    <source src="VID_20250615_005136_990.mp4" type="video/mp4" />
+<video controls>
+    <source src="VID_20250615_005136_990.mp4" type="video/mp4">
     Ваш браузер не поддерживает видео.
-  </video>
+</video>
+
+<div id="questionSection">
+    <p>Вопрос: Что за фильм на видео?</p>
+    <input type="text" id="answerInput" placeholder="Введите ответ">
+    <button onclick="checkAnswer()">Ответить</button>
+    <div id="answerResult"></div>
 </div>
 
-<div id="question-container">
-  <p>Как называется этот фильм?</p>
-  <input type="text" id="answer" placeholder="Введите ответ" autocomplete="off" />
-  <button onclick="checkAnswer()">Отправить</button>
-  <div id="result"></div>
+<div id="codeSection" class="hidden">
+    <p>Правильный ответ! Ваш уникальный код: <span id="generatedCode"></span></p>
+    <p>Инструкция: Отправьте этот код в Telegram: @kurtsworlds96</p>
+    <p>Если я вас заблокировал, пишите в Discord: bublik_dublik_</p>
+    <input type="text" id="codeInput" placeholder="Введите код для проверки">
+    <button onclick="checkCode()">Проверить код</button>
+    <div id="codeResult"></div>
 </div>
 
 <script>
-  const folder = document.getElementById('folder');
-  const videoContainer = document.getElementById('video-container');
-  const questionContainer = document.getElementById('question-container');
-  const video = document.getElementById('video');
-  const result = document.getElementById('result');
+    let generatedCode = '';
 
-  folder.addEventListener('click', () => {
-    folder.style.display = 'none';
-    videoContainer.style.display = 'block';
-  });
-
-  video.addEventListener('ended', () => {
-    questionContainer.style.display = 'block';
-  });
-
-  function checkAnswer() {
-    const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
-    // Правильный ответ — подставь свой
-    const correctAnswer = 'spree';
-
-    if(userAnswer === correctAnswer) {
-      result.style.color = '#0f0';
-      result.textContent = 'Верно! Ваш код: ABC123\nИнструкция: ...';
-    } else {
-      result.style.color = 'red';
-      result.textContent = 'Неверный ответ, попробуйте ещё.';
+    function generateCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let code = '';
+        for (let i = 0; i < 8; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return code;
     }
-  }
+
+    function checkAnswer() {
+        const answer = document.getElementById('answerInput').value.trim().toLowerCase();
+        if (answer === 'spree') {
+            generatedCode = generateCode();
+            document.getElementById('generatedCode').innerText = generatedCode;
+            document.getElementById('questionSection').classList.add('hidden');
+            document.getElementById('codeSection').classList.remove('hidden');
+
+            // Сохраняем код и время в localStorage для admin.html
+            let submittedCodes = JSON.parse(localStorage.getItem('submittedCodes')) || [];
+            submittedCodes.push({ code: generatedCode, date: new Date().toLocaleString() });
+            localStorage.setItem('submittedCodes', JSON.stringify(submittedCodes));
+        } else {
+            document.getElementById('answerResult').innerText = 'Неверный ответ. Попробуйте ещё раз.';
+        }
+    }
+
+    function checkCode() {
+        const enteredCode = document.getElementById('codeInput').value.trim();
+        if (enteredCode === generatedCode) {
+            document.getElementById('codeResult').innerText = 'Код подтвержден. Ожидайте ответа в Telegram.';
+        } else {
+            document.getElementById('codeResult').innerText = 'Неверный код.';
+        }
+    }
 </script>
 
 </body>
