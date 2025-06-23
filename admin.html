@@ -2,80 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <style>
         body {
             background-color: black;
             color: #00FF00;
-            font-family: monospace;
+            font-family: 'Courier New', Courier, monospace;
             padding: 20px;
         }
-        h1 {
-            border-bottom: 1px solid #00FF00;
-            padding-bottom: 10px;
-        }
-        .file-list a {
-            display: block;
+
+        h1, h2 {
             color: #00FF00;
+        }
+
+        a {
+            color: #00FF00;
+            text-decoration: none;
+            display: block;
             margin: 5px 0;
-            cursor: pointer;
+        }
+
+        a:hover {
             text-decoration: underline;
         }
-        #fileContent {
+
+        .file-viewer {
             margin-top: 20px;
-            white-space: pre-wrap;
             border: 1px solid #00FF00;
             padding: 10px;
-            display: none;
-            position: relative;
+            width: 600px;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
         }
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: red;
-            color: white;
+
+        .close-btn {
+            margin-top: 10px;
+            background-color: #00FF00;
+            color: black;
             border: none;
             padding: 5px 10px;
             cursor: pointer;
-            font-size: 14px;
         }
     </style>
 </head>
 <body>
+
     <h1>Admin Panel</h1>
-    <div class="file-list">
-        <a onclick="loadFile('what-i-wanted-to-do-on-the-channel.txt')">what-i-wanted-to-do-on-the-channel.txt</a>
-        <a onclick="loadFile('what-i-will-do-next.txt')">what-i-will-do-next.txt</a>
-        <a onclick="loadFile('how-i-lost-everything.txt')">how-i-lost-everything.txt</a>
-        <a onclick="loadFile('channel-history.txt')">channel-history.txt</a>
-        <a onclick="loadFile('why-i-created-the-channel.txt')">why-i-created-the-channel.txt</a>
+
+    <h2>Available Files:</h2>
+    <div id="file-list">
+        <!-- Здесь будут отображаться файлы -->
     </div>
 
-    <div id="fileContent">
-        <button class="close-button" onclick="closeFile()">Close</button>
-        <pre id="contentArea"></pre>
-    </div>
+    <div id="file-viewer" class="file-viewer" style="display: none;"></div>
+    <button class="close-btn" id="close-btn" style="display: none;" onclick="closeFile()">Закрыть файл</button>
 
     <script>
-        function loadFile(fileName) {
-            fetch(fileName)
+        const files = [
+            'what-i-wanted-to-do-on-the-channel.txt',
+            'what-i-will-do-next.txt',
+            'how-i-lost-everything.txt',
+            'channel-history.txt',
+            'why-i-created-the-channel.txt'
+        ];
+
+        const fileList = document.getElementById('file-list');
+        const fileViewer = document.getElementById('file-viewer');
+        const closeBtn = document.getElementById('close-btn');
+
+        files.forEach(file => {
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = file.replace(/-/g, ' ').replace('.txt', '');
+            link.onclick = () => fetchFile(file);
+            fileList.appendChild(link);
+        });
+
+        function fetchFile(filename) {
+            fetch(`/files/${filename}`)
                 .then(response => response.text())
                 .then(data => {
-                    document.getElementById('contentArea').textContent = data;
-                    document.getElementById('fileContent').style.display = 'block';
-                })
-                .catch(error => {
-                    document.getElementById('contentArea').textContent = 'Error loading file.';
-                    document.getElementById('fileContent').style.display = 'block';
+                    fileViewer.textContent = data;
+                    fileViewer.style.display = 'block';
+                    closeBtn.style.display = 'inline-block';
                 });
         }
 
         function closeFile() {
-            document.getElementById('fileContent').style.display = 'none';
-            document.getElementById('contentArea').textContent = '';
+            fileViewer.style.display = 'none';
+            closeBtn.style.display = 'none';
+            fileViewer.textContent = '';
         }
     </script>
+
 </body>
 </html>
