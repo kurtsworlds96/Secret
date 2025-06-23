@@ -6,37 +6,39 @@
     <title>Terminal Login</title>
     <style>
         body {
-            background-color: #000;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: #00FF00;
+            font-family: monospace;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
         }
-        .login-container {
-            border: 2px solid #00ff00;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            width: 300px;
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: monospace;
         }
         input {
-            background-color: #000;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 5px;
-            margin: 5px 0;
-            width: 90%;
+            width: 220px;
         }
         button {
-            background-color: #000;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 7px 20px;
             cursor: pointer;
-            margin-top: 10px;
+            background-color: #00FF00;
+            color: black;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #00cc00;
         }
         .error {
             color: red;
@@ -45,29 +47,25 @@
     </style>
 </head>
 <body>
-
-<div class="login-container">
-    <h2>Terminal Login</h2>
-    <input type="text" id="username" placeholder="Username"><br>
+    <h1>Authorization</h1>
+    <input type="text" id="username" placeholder="Login"><br>
     <input type="password" id="password" placeholder="Password"><br>
     <button onclick="login()">Login</button>
-    <div id="error" class="error"></div>
-</div>
+    <div class="error" id="errorMsg"></div>
 
-<script>
-    function login() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
+    <script>
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-        if (username === 'User' && password === 'kurtsworlds96') {
-            window.location.href = 'user.html';
-        } else if (username === 'Ninthebasin' && password === '04_12_2023') {
-            window.location.href = 'admin.html';
-        } else {
-            document.getElementById('error').innerText = 'Неверный логин или пароль';
+            if (username === 'User' && password === 'kurtsworlds96') {
+                window.location.href = 'user.html';
+            } else if (username === 'ninthebasin' && password === '04_12_2023') {
+                window.location.href = 'admin.html';
+            } else {
+                document.getElementById('errorMsg').textContent = 'Invalid login or password.';
+            }
         }
-    }
-</script>
-
+    </script>
 </body>
 </html>

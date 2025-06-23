@@ -6,63 +6,76 @@
     <title>Admin Panel</title>
     <style>
         body {
-            background-color: #000;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-        }
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-            color: #00ff00;
-        }
-        th, td {
-            border: 1px solid #00ff00;
-            padding: 8px 12px;
+            background-color: black;
+            color: #00FF00;
+            font-family: monospace;
+            padding: 20px;
         }
         h1 {
-            margin-bottom: 20px;
+            border-bottom: 1px solid #00FF00;
+            padding-bottom: 10px;
+        }
+        .file-list a {
+            display: block;
+            color: #00FF00;
+            margin: 5px 0;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        #fileContent {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            border: 1px solid #00FF00;
+            padding: 10px;
+            display: none;
+            position: relative;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
     <h1>Admin Panel</h1>
-    <table id="codeTable">
-        <tr>
-            <th>Код</th>
-            <th>Дата отправки</th>
-        </tr>
-    </table>
-</div>
+    <div class="file-list">
+        <a onclick="loadFile('what-i-wanted-to-do-on-the-channel.txt')">what-i-wanted-to-do-on-the-channel.txt</a>
+        <a onclick="loadFile('what-i-will-do-next.txt')">what-i-will-do-next.txt</a>
+        <a onclick="loadFile('how-i-lost-everything.txt')">how-i-lost-everything.txt</a>
+        <a onclick="loadFile('channel-history.txt')">channel-history.txt</a>
+        <a onclick="loadFile('why-i-created-the-channel.txt')">why-i-created-the-channel.txt</a>
+    </div>
 
-<script>
-    // Пример для теста - здесь ты потом вручную будешь добавлять новые коды
-    const codes = JSON.parse(localStorage.getItem('submittedCodes')) || [];
+    <div id="fileContent">
+        <button class="close-button" onclick="closeFile()">Close</button>
+        <pre id="contentArea"></pre>
+    </div>
 
-    const table = document.getElementById('codeTable');
+    <script>
+        function loadFile(fileName) {
+            fetch(fileName)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('contentArea').textContent = data;
+                    document.getElementById('fileContent').style.display = 'block';
+                })
+                .catch(error => {
+                    document.getElementById('contentArea').textContent = 'Error loading file.';
+                    document.getElementById('fileContent').style.display = 'block';
+                });
+        }
 
-    codes.forEach(codeEntry => {
-        const row = document.createElement('tr');
-        const codeCell = document.createElement('td');
-        const dateCell = document.createElement('td');
-
-        codeCell.innerText = codeEntry.code;
-        dateCell.innerText = codeEntry.date;
-
-        row.appendChild(codeCell);
-        row.appendChild(dateCell);
-        table.appendChild(row);
-    });
-</script>
-
+        function closeFile() {
+            document.getElementById('fileContent').style.display = 'none';
+            document.getElementById('contentArea').textContent = '';
+        }
+    </script>
 </body>
 </html>
