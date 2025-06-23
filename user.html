@@ -1,101 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video and Question</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        video {
-            max-width: 90%;
-            border: 2px solid #00ff00;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        input, button {
-            background-color: #000;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 7px 10px;
-            margin: 5px;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Доступ к контенту</title>
+<style>
+  body {
+    background: #000;
+    color: #0f0;
+    font-family: monospace, monospace;
+    padding: 20px;
+    text-align: center;
+  }
+  video {
+    max-width: 90vw;
+    border: 2px solid #0f0;
+    margin-bottom: 20px;
+  }
+  input, button {
+    font-family: monospace;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 5px;
+    border: 2px solid #0f0;
+    background: #000;
+    color: #0f0;
+  }
+  button:hover {
+    background: #0f0;
+    color: #000;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 20px;
+    white-space: pre-line;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
 
-<h1>Видео-вопрос</h1>
+<h1>Видео и вопрос</h1>
 
 <video controls>
-    <source src="VID_20250615_005136_990.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео.
+  <source src="https://drive.google.com/uc?export=download&id=1aMGBlSItF4CPzzcUNCRFSHKSfQelxxJ9" type="video/mp4" />
+  Ваш браузер не поддерживает видео.
 </video>
 
-<div id="questionSection">
-    <p>Вопрос: Что за фильм на видео?</p>
-    <input type="text" id="answerInput" placeholder="Введите ответ">
-    <button onclick="checkAnswer()">Ответить</button>
-    <div id="answerResult"></div>
-</div>
+<p>Что за фильм на видео?</p>
+<input type="text" id="answer" placeholder="Введите ответ" autocomplete="off" />
+<button onclick="checkAnswer()">Ответить</button>
 
-<div id="codeSection" class="hidden">
-    <p>Правильный ответ! Ваш уникальный код: <span id="generatedCode"></span></p>
-    <p>Инструкция: Отправьте этот код в Telegram: @kurtsworlds96</p>
-    <p>Если я вас заблокировал, пишите в Discord: bublik_dublik_</p>
-    <input type="text" id="codeInput" placeholder="Введите код для проверки">
-    <button onclick="checkCode()">Проверить код</button>
-    <div id="codeResult"></div>
-</div>
+<div id="result"></div>
 
 <script>
-    let generatedCode = '';
+  const correctAnswer = "spree";
+  const staticCode = "WSA-632-DSW";
+  const tgUser = "@kurtsworlds96";
+  const discordUser = "bublik_dublik_";
 
-    function generateCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let code = '';
-        for (let i = 0; i < 8; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
+  function checkAnswer() {
+    const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+    const resultDiv = document.getElementById("result");
+
+    if (userAnswer === correctAnswer) {
+      resultDiv.style.color = "#0f0";
+      resultDiv.innerHTML = 
+        `Ответ правильный!\n\n` +
+        `Отправьте этот код в Telegram: <b>${tgUser}</b>\n` +
+        `Если я вас заблокировал, пишите в Discord: <b>${discordUser}</b>\n\n` +
+        `Ваш код доступа: <b>${staticCode}</b>`;
+    } else {
+      resultDiv.style.color = "#f00";
+      resultDiv.textContent = "Неправильный ответ, попробуйте еще.";
     }
-
-    function checkAnswer() {
-        const answer = document.getElementById('answerInput').value.trim().toLowerCase();
-        if (answer === 'spree') {
-            generatedCode = generateCode();
-            document.getElementById('generatedCode').innerText = generatedCode;
-            document.getElementById('questionSection').classList.add('hidden');
-            document.getElementById('codeSection').classList.remove('hidden');
-
-            // Сохраняем код и время в localStorage для admin.html
-            let submittedCodes = JSON.parse(localStorage.getItem('submittedCodes')) || [];
-            submittedCodes.push({ code: generatedCode, date: new Date().toLocaleString() });
-            localStorage.setItem('submittedCodes', JSON.stringify(submittedCodes));
-        } else {
-            document.getElementById('answerResult').innerText = 'Неверный ответ. Попробуйте ещё раз.';
-        }
-    }
-
-    function checkCode() {
-        const enteredCode = document.getElementById('codeInput').value.trim();
-        if (enteredCode === generatedCode) {
-            document.getElementById('codeResult').innerText = 'Код подтвержден. Ожидайте ответа в Telegram.';
-        } else {
-            document.getElementById('codeResult').innerText = 'Неверный код.';
-        }
-    }
+  }
 </script>
 
 </body>
