@@ -1,117 +1,67 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Админ панель</title>
-<style>
-  body {
-    background: #000;
-    color: #0f0;
-    font-family: 'Courier New', Courier, monospace;
-    margin: 0; padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  .tabs {
-    max-width: 600px;
-    margin: 0 auto 20px;
-    display: flex;
-    border-bottom: 1px solid #0f0;
-  }
-  .tab {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: 1px solid #0f0;
-    border-bottom: none;
-    background: #111;
-    color: #0f0;
-    user-select: none;
-  }
-  .tab.active {
-    background: #000;
-    font-weight: bold;
-  }
-  #fileSection {
-    max-width: 600px;
-    margin: 0 auto;
-    display: none;
-  }
-  ul.file-list {
-    list-style: none;
-    padding: 0;
-  }
-  ul.file-list li {
-    background: #111;
-    margin: 8px 0;
-    padding: 12px;
-    border: 1px solid #0f0;
-  }
-  ul.file-list li a {
-    color: #0f0;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-  }
-  ul.file-list li a:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Админ Панель</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
+    }
+    h1 {
+      color: #0f0;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: transparent;
+      border: 1px solid #0f0;
+      color: #0f0;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #fileList {
+      margin-top: 20px;
+    }
+    .file-item {
+      margin: 5px 0;
+    }
+    .file-item a {
+      color: #0f0;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
+  <h1>Админ Панель</h1>
+  <button id="showBtn">Файлы</button>
+  <div id="fileList" style="display: none;"></div>
 
-<h1>Админ панель</h1>
+  <script>
+    const files = [
+      "channel-history.txt",
+      "why-i-created-the-channel.txt",
+      "how-i-lost-everything.txt",
+      "what-i-will-do-next.txt",
+      "what-i-wanted-to-do.txt"
+    ];
 
-<div class="tabs">
-  <div class="tab active" id="filesTab">Файлы</div>
-</div>
+    document.getElementById('showBtn').addEventListener('click', () => {
+      const list = document.getElementById('fileList');
+      list.innerHTML = '';
 
-<div id="fileSection">
-  <ul class="file-list" id="fileList"></ul>
-</div>
+      files.forEach(file => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `<a href="${file}" download>${file}</a>`;
+        list.appendChild(div);
+      });
 
-<script>
-  const files = [
-    "what-i-wanted-to-do-on-the-channel.txt",
-    "what-i-will-do-next.txt",
-    "how-i-lost-everything.txt",
-    "channel-history.txt",
-    "why-i-created-the-channel.txt"
-  ];
-
-  const filesTab = document.getElementById('filesTab');
-  const fileSection = document.getElementById('fileSection');
-  const fileListEl = document.getElementById('fileList');
-
-  // Показываем/скрываем секцию файлов по клику на вкладку
-  filesTab.addEventListener('click', () => {
-    if (fileSection.style.display === 'none' || fileSection.style.display === '') {
-      fileSection.style.display = 'block';
-      filesTab.classList.add('active');
-    } else {
-      fileSection.style.display = 'none';
-      filesTab.classList.remove('active');
-    }
-  });
-
-  // Заполняем список файлов (тексты)
-  function fillFileList() {
-    fileListEl.innerHTML = '';
-    files.forEach(file => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = file;
-      a.download = file;
-      a.textContent = file.replace(/-/g, ' ').replace('.txt', '').toUpperCase();
-      li.appendChild(a);
-      fileListEl.appendChild(li);
+      list.style.display = 'block';
     });
-  }
-
-  fillFileList();
-</script>
-
+  </script>
 </body>
 </html>

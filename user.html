@@ -1,81 +1,89 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Доступ к контенту</title>
-<style>
-  body {
-    background: #000;
-    color: #0f0;
-    font-family: monospace, monospace;
-    padding: 20px;
-    text-align: center;
-  }
-  video {
-    max-width: 90vw;
-    border: 2px solid #0f0;
-    margin-bottom: 20px;
-  }
-  input, button {
-    font-family: monospace;
-    font-size: 1rem;
-    padding: 10px;
-    margin: 5px;
-    border: 2px solid #0f0;
-    background: #000;
-    color: #0f0;
-  }
-  button:hover {
-    background: #0f0;
-    color: #000;
-    cursor: pointer;
-  }
-  #result {
-    margin-top: 20px;
-    white-space: pre-line;
-    font-weight: bold;
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>User Panel</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
+      text-align: center;
+    }
+    .folder {
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px dashed #0f0;
+      display: inline-block;
+      cursor: pointer;
+    }
+    video {
+      border: 1px solid #0f0;
+      margin-top: 20px;
+      max-width: 90vw;
+    }
+    .question {
+      margin-top: 20px;
+    }
+    input, button {
+      background: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 8px;
+      margin: 5px;
+      font-family: monospace;
+    }
+    .result {
+      display: none;
+      margin-top: 30px;
+      border: 1px solid #0f0;
+      padding: 15px;
+      white-space: pre-wrap;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Видео и вопрос</h1>
+  <h1>User Panel</h1>
 
-<video controls>
-  <source src="https://drive.google.com/uc?export=download&id=1aMGBlSItF4CPzzcUNCRFSHKSfQelxxJ9" type="video/mp4" />
-  Ваш браузер не поддерживает видео.
-</video>
+  <div class="folder" onclick="openFolder()">
+    📂 Открыть папку
+  </div>
 
-<p>Что за фильм на видео?</p>
-<input type="text" id="answer" placeholder="Введите ответ" autocomplete="off" />
-<button onclick="checkAnswer()">Ответить</button>
+  <div id="content" style="display:none;">
+    <video controls>
+      <source src="VID_20250615_005136_990.mp4" type="video/mp4">
+      Ваш браузер не поддерживает видео.
+    </video>
 
-<div id="result"></div>
+    <div class="question">
+      <p>Вопрос: Что за фильм на видео?</p>
+      <input type="text" id="answer" placeholder="Введите ответ">
+      <button onclick="showCode()">Ответить</button>
+    </div>
+  </div>
 
-<script>
-  const correctAnswer = "spree";
-  const staticCode = "WSA-632-DSW";
-  const tgUser = "@kurtsworlds96";
-  const discordUser = "bublik_dublik_";
+  <div class="result" id="resultBox">
+    Ваш код: <b>WSA-632-DSW</b>
 
-  function checkAnswer() {
-    const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
-    const resultDiv = document.getElementById("result");
+    Отправьте этот код в Telegram: <b>@kurtsworlds96</b><br>
+    Если я вас заблокировал, пишите в Discord: <b>bublik_dublik_</b>
+  </div>
 
-    if (userAnswer === correctAnswer) {
-      resultDiv.style.color = "#0f0";
-      resultDiv.innerHTML = 
-        `Ответ правильный!\n\n` +
-        `Отправьте этот код в Telegram: <b>${tgUser}</b>\n` +
-        `Если я вас заблокировал, пишите в Discord: <b>${discordUser}</b>\n\n` +
-        `Ваш код доступа: <b>${staticCode}</b>`;
-    } else {
-      resultDiv.style.color = "#f00";
-      resultDiv.textContent = "Неправильный ответ, попробуйте еще.";
+  <script>
+    function openFolder() {
+      document.querySelector('.folder').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
     }
-  }
-</script>
+    function showCode() {
+      document.getElementById('resultBox').style.display = 'block';
+    }
+  </script>
 
 </body>
 </html>
